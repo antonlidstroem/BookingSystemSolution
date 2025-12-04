@@ -1,0 +1,15 @@
+# Visual Studio-filer
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.dbmdl
+
+# Byggmappar
+bin/
+obj/
+
+# Paket
+*.nupkg
+*.snupkg
