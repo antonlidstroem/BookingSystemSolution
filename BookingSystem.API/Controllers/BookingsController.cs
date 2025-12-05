@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.DAL.Data;
 using BookingSystem.DAL.Model;
 
 namespace BookingSystem.API.Controllers
 {
-    public class BookingsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BookingsController : ControllerBase
     {
         private readonly BookingSystemAPIContext _context;
 
@@ -19,147 +21,83 @@ namespace BookingSystem.API.Controllers
             _context = context;
         }
 
-        // GET: Bookings
-        public async Task<IActionResult> Index()
+        // GET: api/Bookings
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBooking()
         {
-            var bookingSystemAPIContext = _context.Booking.Include(b => b.Customer).Include(b => b.Room);
-            return View(await bookingSystemAPIContext.ToListAsync());
+            return await _context.Booking.ToListAsync();
         }
 
-        // GET: Bookings/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Bookings/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Booking>> GetBooking(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var booking = await _context.Booking
-                .Include(b => b.Customer)
-                .Include(b => b.Room)
-                .FirstOrDefaultAsync(m => m.BookingId == id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return View(booking);
-        }
-
-        // GET: Bookings/Create
-        public IActionResult Create()
-        {
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "Name");
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "RoomId", "Name");
-            return View();
-        }
-
-        // POST: Bookings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookingId,CustomerId,RoomId,StartTime,EndTime")] Booking booking)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(booking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "Name", booking.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "RoomId", "Name", booking.RoomId);
-            return View(booking);
-        }
-
-        // GET: Bookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var booking = await _context.Booking.FindAsync(id);
+
             if (booking == null)
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "Name", booking.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "RoomId", "Name", booking.RoomId);
-            return View(booking);
+
+            return booking;
         }
 
-        // POST: Bookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookingId,CustomerId,RoomId,StartTime,EndTime")] Booking booking)
+        // PUT: api/Bookings/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
             if (id != booking.BookingId)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(booking).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(booking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookingExists(booking.BookingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "Name", booking.CustomerId);
-            ViewData["RoomId"] = new SelectList(_context.Set<Room>(), "RoomId", "Name", booking.RoomId);
-            return View(booking);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BookingExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Bookings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Bookings
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Booking.Add(booking);
+            await _context.SaveChangesAsync();
 
-            var booking = await _context.Booking
-                .Include(b => b.Customer)
-                .Include(b => b.Room)
-                .FirstOrDefaultAsync(m => m.BookingId == id);
+            return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
+        }
+
+        // DELETE: api/Bookings/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            var booking = await _context.Booking.FindAsync(id);
             if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(booking);
-        }
-
-        // POST: Bookings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var booking = await _context.Booking.FindAsync(id);
-            if (booking != null)
-            {
-                _context.Booking.Remove(booking);
-            }
-
+            _context.Booking.Remove(booking);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool BookingExists(int id)

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.DAL.Data;
 using BookingSystem.DAL.Model;
 
 namespace BookingSystem.API.Controllers
 {
-    public class RoomsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RoomsController : ControllerBase
     {
         private readonly BookingSystemAPIContext _context;
 
@@ -19,134 +21,83 @@ namespace BookingSystem.API.Controllers
             _context = context;
         }
 
-        // GET: Rooms
-        public async Task<IActionResult> Index()
+        // GET: api/Rooms
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRoom()
         {
-            return View(await _context.Room.ToListAsync());
+            return await _context.Room.ToListAsync();
         }
 
-        // GET: Rooms/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Rooms/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var room = await _context.Room
-                .FirstOrDefaultAsync(m => m.RoomId == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            return View(room);
-        }
-
-        // GET: Rooms/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Rooms/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoomId,Name")] Room room)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(room);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(room);
-        }
-
-        // GET: Rooms/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var room = await _context.Room.FindAsync(id);
+
             if (room == null)
             {
                 return NotFound();
             }
-            return View(room);
+
+            return room;
         }
 
-        // POST: Rooms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RoomId,Name")] Room room)
+        // PUT: api/Rooms/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRoom(int id, Room room)
         {
             if (id != room.RoomId)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(room).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(room);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RoomExists(room.RoomId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(room);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RoomExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Rooms/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Rooms
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Room>> PostRoom(Room room)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Room.Add(room);
+            await _context.SaveChangesAsync();
 
-            var room = await _context.Room
-                .FirstOrDefaultAsync(m => m.RoomId == id);
+            return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
+        }
+
+        // DELETE: api/Rooms/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRoom(int id)
+        {
+            var room = await _context.Room.FindAsync(id);
             if (room == null)
             {
                 return NotFound();
             }
 
-            return View(room);
-        }
-
-        // POST: Rooms/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var room = await _context.Room.FindAsync(id);
-            if (room != null)
-            {
-                _context.Room.Remove(room);
-            }
-
+            _context.Room.Remove(room);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool RoomExists(int id)

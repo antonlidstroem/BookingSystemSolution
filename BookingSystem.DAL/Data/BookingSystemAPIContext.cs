@@ -14,8 +14,8 @@ namespace BookingSystem.DAL.Data
         {
         }
 
-        public DbSet<BookingSystem.DAL.Model.Customer> Customer { get; set; } = default!;
-        public DbSet<BookingSystem.DAL.Model.Booking> Booking { get; set; } = default!;
-        public DbSet<BookingSystem.DAL.Model.Room> Room { get; set; } = default!;
+        public DbSet<Customer> Customer { get; set; } = default!;
+        public DbSet<Booking> Booking { get; set; } = default!;
+        public DbSet<Room> Room { get; set; } = default!;
     }
 }
