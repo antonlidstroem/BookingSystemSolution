@@ -1,4 +1,5 @@
 ﻿using BookingSystem.API.Services;
+using BookingSystem.DAL.Data;
 using BookingSystem.DAL.Repositories;
 using BookingSystem.DTO.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +9,13 @@ namespace BookingSystem.Test
 {
     public class CustomerServiceIntegrationTests
     {
-        private CustomerService GetService(out TestDbContext context)
+        private CustomerService GetService(out BookingSystemAPIContext context)
         {
-            var options = new DbContextOptionsBuilder<TestDbContext>()
+            var options = new DbContextOptionsBuilder<BookingSystemAPIContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            context = new TestDbContext(options);
+            context = new BookingSystemAPIContext(options);
             var repo = new CustomerRepository(context);
             return new CustomerService(repo);
         }
