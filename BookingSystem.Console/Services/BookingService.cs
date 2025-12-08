@@ -1,4 +1,4 @@
-﻿using BookingSystem.Console.DTO;
+﻿using BookingSystem.DTO.DTO;
 using BookingSystem.Console.Interface;
 using System;
 using System.Collections.Generic;

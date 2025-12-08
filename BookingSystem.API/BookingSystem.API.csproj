@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookingSystem.DAL\BookingSystem.DAL.csproj" />
+    <ProjectReference Include="..\BookingSystem.DTO\BookingSystem.DTO.csproj" />
   </ItemGroup>
 
 </Project>

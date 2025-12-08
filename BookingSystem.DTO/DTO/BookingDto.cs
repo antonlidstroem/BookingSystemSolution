@@ -1,4 +1,4 @@
-﻿namespace BookingSystem.Console.DTO
+﻿namespace BookingSystem.DTO.DTO
 {
     public class BookingDto
     {
