@@ -45,7 +45,7 @@ namespace BookingSystem.API.Controllers
         }
 
         [HttpGet("available")]
-        public async Task<ActionResult<bool>> IsRoomAvailable(int roomId, DateTime start, DateTime end)
+        public async Task<ActionResult<bool>> IsRoomAvailable([FromQuery] int roomId, [FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             var available = await _service.IsRoomAvailableAsync(roomId, start, end);
             return Ok(available);

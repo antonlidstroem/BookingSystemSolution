@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using BookingSystem.API.Interface;
+using BookingSystem.API.Services;
 using BookingSystem.DAL.Data;
 using BookingSystem.DAL.Interface;
 using BookingSystem.DAL.Repositories;
-using BookingSystem.API.Interface;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 
 
@@ -11,12 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookingSystemAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystemAPIContext") ?? throw new InvalidOperationException("Connection string 'BookingSystemAPIContext' not found.")));
 
-// DAL (Repository)
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-
-// Service-lagret (API-logik)
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 
 // Add services to the container.
