@@ -10,7 +10,7 @@ namespace BookingSystem.DAL.Model
     public class Customer
     {
         public int CustomerId { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

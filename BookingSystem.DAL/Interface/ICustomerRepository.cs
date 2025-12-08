@@ -10,5 +10,6 @@ namespace BookingSystem.DAL.Interface
         Task<Customer?> GetByIdAsync(int id);
         Task AddAsync(Customer customer);
         Task SaveChangesAsync();
+        void Remove(Customer customer);
     }
 }

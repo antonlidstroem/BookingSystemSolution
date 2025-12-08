@@ -35,5 +35,9 @@ namespace BookingSystem.DAL.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public void Remove(Room room)
+        {
+            _context.Room.Remove(room);
+        }
     }
 }

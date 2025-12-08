@@ -22,8 +22,36 @@ namespace BookingSystem.API.Services
 
         public async Task<RoomDto?> GetByIdAsync(int id)
         {
-            var room = await _repo.GetByIdAsync(id);
-            return room == null ? null : MapToDto(room);
+            var entity = await _repo.GetByIdAsync(id);
+            return entity == null ? null : MapToDto(entity);
+        }
+
+        public async Task<RoomDto> CreateAsync(RoomDto dto)
+        {
+            var entity = new Room { Name = dto.Name };
+            await _repo.AddAsync(entity);
+            await _repo.SaveChangesAsync();
+            return MapToDto(entity);
+        }
+
+        public async Task<RoomDto> UpdateAsync(RoomDto dto)
+        {
+            var entity = await _repo.GetByIdAsync(dto.RoomId);
+            if (entity == null) throw new KeyNotFoundException("Room not found");
+
+            entity.Name = dto.Name;
+            await _repo.SaveChangesAsync();
+            return MapToDto(entity);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null) return false;
+
+            _repo.Remove(entity);
+            await _repo.SaveChangesAsync();
+            return true;
         }
 
         private static RoomDto MapToDto(Room r) => new RoomDto

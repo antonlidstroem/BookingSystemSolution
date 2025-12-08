@@ -35,5 +35,10 @@ namespace BookingSystem.DAL.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public void Remove(Customer customer)
+        {
+            _context.Customer.Remove(customer);
+        }
+
     }
 }

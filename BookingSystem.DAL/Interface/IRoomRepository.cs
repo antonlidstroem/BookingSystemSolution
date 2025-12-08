@@ -10,5 +10,6 @@ namespace BookingSystem.DAL.Interface
         Task<Room?> GetByIdAsync(int id);
         Task AddAsync(Room room);
         Task SaveChangesAsync();
+        void Remove(Room room);
     }
 }
