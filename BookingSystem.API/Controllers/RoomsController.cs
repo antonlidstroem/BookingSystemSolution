@@ -30,6 +30,7 @@ namespace BookingSystem.API.Controllers
             var room = await _service.GetByIdAsync(id);
             if (room == null) return NotFound();
             return Ok(room);
+            //return NotFound();
         }
 
         // POST: api/rooms

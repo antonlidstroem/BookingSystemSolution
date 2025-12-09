@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.DAL", "Bookin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Console", "BookingSystem.Console\BookingSystem.Console.csproj", "{A7AB044E-7DC2-41F2-9AFA-AEC7555431DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Test", "BookingSystem.Test\BookingSystem.Test.csproj", "{53CD57B5-8CEE-464C-89E7-FAA8EFBF3839}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.DTO", "BookingSystem.DTO\BookingSystem.DTO.csproj", "{4EADE150-0CE9-4942-8460-8A29AA662CA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Test3", "BookingSystem.Test3\BookingSystem.Test3.csproj", "{57AF2F80-469A-4E6A-B815-B1F5CBF84264}"
@@ -33,10 +31,6 @@ Global
 		{A7AB044E-7DC2-41F2-9AFA-AEC7555431DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7AB044E-7DC2-41F2-9AFA-AEC7555431DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7AB044E-7DC2-41F2-9AFA-AEC7555431DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53CD57B5-8CEE-464C-89E7-FAA8EFBF3839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53CD57B5-8CEE-464C-89E7-FAA8EFBF3839}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53CD57B5-8CEE-464C-89E7-FAA8EFBF3839}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53CD57B5-8CEE-464C-89E7-FAA8EFBF3839}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4EADE150-0CE9-4942-8460-8A29AA662CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4EADE150-0CE9-4942-8460-8A29AA662CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EADE150-0CE9-4942-8460-8A29AA662CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
