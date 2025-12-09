@@ -18,12 +18,14 @@ namespace BookingSystem.API.Services
         {
             var entities = await _repo.GetAllAsync();
             return entities.Select(MapToDto).ToList();
+            //return null;
         }
 
         public async Task<CustomerDto?> GetByIdAsync(int id)
         {
             var entity = await _repo.GetByIdAsync(id);
             return entity == null ? null : MapToDto(entity);
+            //return null;
         }
 
         public async Task<CustomerDto> CreateAsync(CustomerDto dto)
@@ -32,6 +34,7 @@ namespace BookingSystem.API.Services
             await _repo.AddAsync(entity);
             await _repo.SaveChangesAsync();
             return MapToDto(entity);
+            //return null;
         }
 
         public async Task<CustomerDto> UpdateAsync(CustomerDto dto)
@@ -42,6 +45,7 @@ namespace BookingSystem.API.Services
             entity.Name = dto.Name;
             await _repo.SaveChangesAsync();
             return MapToDto(entity);
+            //return null;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -52,6 +56,8 @@ namespace BookingSystem.API.Services
             _repo.Remove(entity);
             await _repo.SaveChangesAsync();
             return true;
+            //return false;
+
         }
 
         private static CustomerDto MapToDto(Customer c) => new CustomerDto
