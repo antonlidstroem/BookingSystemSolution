@@ -2,6 +2,7 @@
 using BookingSystem.DAL.Interface;
 using BookingSystem.DAL.Model;
 using BookingSystem.DTO.DTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public class BookingService : IBookingService
 {
@@ -20,6 +21,7 @@ public class BookingService : IBookingService
         var entity = new Booking
         {
             RoomId = dto.RoomId,
+            CustomerId = dto.CustomerId,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime
         };
@@ -29,6 +31,7 @@ public class BookingService : IBookingService
 
         dto.BookingId = entity.BookingId; // om du auto-genererar id i databasen
         return dto;
+        //return null;
     }
 
     public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime start, DateTime end)
@@ -47,6 +50,7 @@ public class BookingService : IBookingService
             StartTime = b.StartTime,
             EndTime = b.EndTime
         }).ToList();
+        //return null;
     }
 
     public async Task<BookingDto?> GetByIdAsync(int id)
@@ -60,6 +64,7 @@ public class BookingService : IBookingService
             StartTime = b.StartTime,
             EndTime = b.EndTime
         };
+        //return null;
     }
 
     public async Task<List<BookingDto>> GetBookingsForRoomAsync(int roomId)
@@ -72,5 +77,6 @@ public class BookingService : IBookingService
             StartTime = b.StartTime,
             EndTime = b.EndTime
         }).ToList();
+        //return null;
     }
 }
