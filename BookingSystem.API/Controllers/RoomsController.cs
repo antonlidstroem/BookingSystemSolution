@@ -1,108 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using BookingSystem.API.Interface;
+using BookingSystem.DTO.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookingSystem.DAL.Data;
-using BookingSystem.DAL.Model;
 
 namespace BookingSystem.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class RoomsController : ControllerBase
     {
-        private readonly BookingSystemAPIContext _context;
+        private readonly IRoomService _service;
 
-        public RoomsController(BookingSystemAPIContext context)
+        public RoomsController(IRoomService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/Rooms
+        // GET: api/rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRoom()
+        public async Task<ActionResult<List<RoomDto>>> GetAll()
         {
-            return await _context.Room.ToListAsync();
+            var rooms = await _service.GetAllAsync();
+            return Ok(rooms);
         }
 
-        // GET: api/Rooms/5
+        // GET: api/rooms/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDto?>> GetById(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            return room;
+            var room = await _service.GetByIdAsync(id);
+            if (room == null) return NotFound();
+            return Ok(room);
         }
 
-        // PUT: api/Rooms/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
-        {
-            if (id != room.RoomId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(room).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Rooms
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/rooms
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDto>> Create(RoomDto dto)
         {
-            _context.Room.Add(room);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
+            var created = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.RoomId }, created);
         }
 
-        // DELETE: api/Rooms/5
+        // PUT: api/rooms/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult<RoomDto>> Update(int id, RoomDto dto)
+        {
+            if (id != dto.RoomId)
+                return BadRequest("ID mismatch");
+
+            var updated = await _service.UpdateAsync(dto);
+            return Ok(updated);
+        }
+
+        // DELETE: api/rooms/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            _context.Room.Remove(room);
-            await _context.SaveChangesAsync();
-
+            bool deleted = await _service.DeleteAsync(id);
+            if (!deleted) return NotFound();
             return NoContent();
-        }
-
-        private bool RoomExists(int id)
-        {
-            return _context.Room.Any(e => e.RoomId == id);
         }
     }
 }

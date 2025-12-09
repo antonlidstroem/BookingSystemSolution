@@ -1,108 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using BookingSystem.API.Interface;
+using BookingSystem.DTO.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookingSystem.DAL.Data;
-using BookingSystem.DAL.Model;
 
 namespace BookingSystem.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class BookingsController : ControllerBase
     {
-        private readonly BookingSystemAPIContext _context;
+        private readonly IBookingService _service;
 
-        public BookingsController(BookingSystemAPIContext context)
+        public BookingsController(IBookingService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/Bookings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBooking()
+        public async Task<ActionResult<List<BookingDto>>> GetAll()
         {
-            return await _context.Booking.ToListAsync();
+            var bookings = await _service.GetAllAsync();
+            return Ok(bookings);
         }
 
-        // GET: api/Bookings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(int id)
+        public async Task<ActionResult<BookingDto?>> GetById(int id)
         {
-            var booking = await _context.Booking.FindAsync(id);
-
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return booking;
+            var booking = await _service.GetByIdAsync(id);
+            if (booking == null) return NotFound();
+            return Ok(booking);
         }
 
-        // PUT: api/Bookings/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBooking(int id, Booking booking)
-        {
-            if (id != booking.BookingId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(booking).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Bookings
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
+        public async Task<ActionResult<BookingDto>> Create(BookingDto dto)
         {
-            _context.Booking.Add(booking);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
+            var created = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.BookingId }, created);
         }
 
-        // DELETE: api/Bookings/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
+        [HttpGet("room/{roomId}")]
+        public async Task<ActionResult<List<BookingDto>>> GetBookingsForRoom(int roomId)
         {
-            var booking = await _context.Booking.FindAsync(id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            _context.Booking.Remove(booking);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var bookings = await _service.GetBookingsForRoomAsync(roomId);
+            return Ok(bookings);
         }
 
-        private bool BookingExists(int id)
+        [HttpGet("available")]
+        public async Task<ActionResult<bool>> IsRoomAvailable([FromQuery] int roomId, [FromQuery] DateTime start, [FromQuery] DateTime end)
         {
-            return _context.Booking.Any(e => e.BookingId == id);
+            var available = await _service.IsRoomAvailableAsync(roomId, start, end);
+            return Ok(available);
         }
     }
 }
