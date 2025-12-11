@@ -38,10 +38,11 @@ while (!exit)
             var bookingDto = new BookingDto
             {
                 RoomId = roomId,
-                StartTime = start,
-                EndTime = end,
+                StartDate = DateOnly.FromDateTime(start),
+                EndDate = DateOnly.FromDateTime(end),
                 CustomerId = customerId
             };
+
             var created = await apiClient.CreateBookingAsync(bookingDto);
             Console.WriteLine($"Bokning skapad med Id: {created.BookingId} för datum {date:yyyy-MM-dd}");
             break;
@@ -52,7 +53,8 @@ while (!exit)
             var bookings = await apiClient.GetBookingsForRoomAsync(roomListId);
             Console.Clear();
             foreach (var b in bookings)
-                Console.WriteLine($"BookingId: {b.BookingId}, CustomerId: {b.CustomerId}, Start: {b.StartTime:yyyy-MM-dd}, End: {b.EndTime:yyyy-MM-dd}");
+                Console.WriteLine($"BookingId: {b.BookingId}, CustomerId: {b.CustomerId}, Start: {b.StartDate:yyyy-MM-dd}, End: {b.EndDate:yyyy-MM-dd}");
+
             break;
 
         case "3":
@@ -88,7 +90,8 @@ while (!exit)
             Console.Clear();
             Console.WriteLine("Alla bokningar:");
             foreach (var b in allBookings)
-                Console.WriteLine($"BookingId: {b.BookingId}, RoomId: {b.RoomId}, CustomerId: {b.CustomerId}, Start: {b.StartTime:yyyy-MM-dd}, End: {b.EndTime:yyyy-MM-dd}");
+                Console.WriteLine($"BookingId: {b.BookingId}, CustomerId: {b.CustomerId}, Start: {b.StartDate:yyyy-MM-dd}, End: {b.EndDate:yyyy-MM-dd}");
+
             break;
 
         case "7": // Lägg till kund

@@ -42,11 +42,19 @@ namespace BookingSystem.Test3
             };
             context.Customer.AddRange(customers);
 
+
+
+
             List<Booking> bookings = new List<Booking>()
-            {
-                new Booking {BookingId = 1, RoomId = 1, CustomerId = 1, StartTime = new DateTime(2024, 7, 1, 9, 0, 0), EndTime = new DateTime(2024, 7, 1, 10, 0, 0)},
-                new Booking {BookingId = 2, RoomId = 2, CustomerId = 2, StartTime = new DateTime(2024, 7, 1, 11, 0, 0), EndTime = new DateTime(2024, 7, 1, 12, 0, 0)}
-            };
+                {
+                    new Booking {BookingId = 1, RoomId = 1, CustomerId = 1, StartDate = new DateOnly(2024,7,1), EndDate = new DateOnly(2024,7,1)},
+                    new Booking {BookingId = 2, RoomId = 2, CustomerId = 2, StartDate = new DateOnly(2024,7,1), EndDate = new DateOnly(2024,7,1)}
+                };
+
+
+
+
+
             context.Booking.AddRange(bookings);
 
             context.SaveChanges();

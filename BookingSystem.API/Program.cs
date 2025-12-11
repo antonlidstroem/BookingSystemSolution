@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookingSystemAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystemAPIContext") ?? throw new InvalidOperationException("Connection string 'BookingSystemAPIContext' not found.")));
@@ -47,3 +46,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+namespace BookingSystem.API
+{
+    public partial class Program { } // tom klass för WebApplicationFactory
+}

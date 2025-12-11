@@ -35,10 +35,17 @@ namespace BookingSystem.DAL.Repositories
         public async Task<List<Booking>> GetBookingsForRoomAsync(int roomId)
         {
             return await _context.Booking
-                .AsNoTracking()
+                //.AsNoTracking()
                 .Where(b => b.RoomId == roomId)
                 .ToListAsync();
         }
+
+        // I BookingRepository
+        public IQueryable<Booking> GetAllBookingsQuery()
+        {
+            return _context.Booking; 
+        }
+
 
         public async Task SaveChangesAsync()
         {

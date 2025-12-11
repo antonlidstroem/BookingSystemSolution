@@ -33,8 +33,22 @@ namespace BookingSystem.API.Controllers
         [HttpPost]
         public async Task<ActionResult<BookingDto>> Create(BookingDto dto)
         {
-            var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.BookingId }, created);
+            try
+            {
+                var created = await _service.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById),
+                    new { id = created.BookingId },
+                    created);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+
         }
 
         [HttpGet("room/{roomId}")]
@@ -45,7 +59,10 @@ namespace BookingSystem.API.Controllers
         }
 
         [HttpGet("available")]
-        public async Task<ActionResult<bool>> IsRoomAvailable([FromQuery] int roomId, [FromQuery] DateTime start, [FromQuery] DateTime end)
+        public async Task<ActionResult<bool>> IsRoomAvailable(
+            [FromQuery] int roomId, 
+            [FromQuery] DateOnly start, 
+            [FromQuery] DateOnly end)
         {
             var available = await _service.IsRoomAvailableAsync(roomId, start, end);
             return Ok(available);
