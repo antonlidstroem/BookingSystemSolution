@@ -58,5 +58,27 @@ namespace BookingSystem.Test3.IntegrationTests
             Assert.Equal(3, createdBooking.RoomId);
             Assert.Equal(2, createdBooking.CustomerId);
         }
+
+        [Fact]
+        public async Task IsRoomAvailable_ForBookedRoom_ReturnsFalse()
+        {
+            var response = await HttpClient.GetAsync("/api/Bookings/available?roomId=1&start=2024-07-01&end=2024-07-01");
+            response.EnsureSuccessStatusCode();
+            var isAvailable = await response.Content.ReadFromJsonAsync<bool>();
+            Assert.False(isAvailable);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task IsRoomAvailable_ForFreeRoom_ReturnsTrue()
+        {
+            var response = await HttpClient.GetAsync("/api/Bookings/available?roomId=3&start=2024-07-01&end=2024-07-01");
+            response.EnsureSuccessStatusCode();
+            var isAvailable = await response.Content.ReadFromJsonAsync<bool>();
+            Assert.True(isAvailable);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+
     }
 }
