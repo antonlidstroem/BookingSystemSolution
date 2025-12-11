@@ -8,8 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (!builder.Environment.IsEnvironment("Testing")) { 
 builder.Services.AddDbContext<BookingSystemAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystemAPIContext") ?? throw new InvalidOperationException("Connection string 'BookingSystemAPIContext' not found.")));
+}
+
+
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();

@@ -20,6 +20,7 @@ namespace BookingSystem.API.Controllers
         {
             var bookings = await _service.GetAllAsync();
             return Ok(bookings);
+            //return null;
         }
 
         [HttpGet("{id}")]
