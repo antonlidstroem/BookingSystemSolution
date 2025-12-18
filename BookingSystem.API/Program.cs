@@ -47,10 +47,11 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<BookingSystemAPIContext>();
 
-    // Migrera databasen (skapar tabeller om de inte finns)
-    context.Database.Migrate();
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        context.Database.Migrate();
+    }
 
-    // Seed data
     SeedHelperRealDb.SeedDatabase(context);
 }
 

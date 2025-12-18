@@ -9,7 +9,7 @@ using BookingSystem.DAL.Repositories;
 using BookingSystem.DTO.DTO;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingSystem.Test3.UnitTests
+namespace BookingSystem.Test3.UnitTests.InMemory
 {
     public class RoomTests : TestBase
     {
