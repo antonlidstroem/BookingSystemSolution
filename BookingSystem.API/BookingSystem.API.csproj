@@ -14,10 +14,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BookingSystem.DAL\BookingSystem.DAL.csproj" />
+    <ProjectReference Include="..\BookingSystem.DTO\BookingSystem.DTO.csproj" />
   </ItemGroup>
 
 </Project>
