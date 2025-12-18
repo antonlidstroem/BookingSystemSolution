@@ -20,8 +20,6 @@ namespace BookingSystem.Test3.UnitTests
             _bookingService = new BookingService(new BookingRepository(context));
         }
 
-
-
         [Theory]
         [InlineData(1, 2, "2024-07-01", false)]  // Upptaget
         [InlineData(2, 1, "2024-07-02", true)]   // Ledigt datum
@@ -111,8 +109,6 @@ namespace BookingSystem.Test3.UnitTests
             Assert.NotNull(bookings);
             Assert.All(bookings, b => Assert.Equal(roomId, b.RoomId));
         }
-
-
     }
 }
 

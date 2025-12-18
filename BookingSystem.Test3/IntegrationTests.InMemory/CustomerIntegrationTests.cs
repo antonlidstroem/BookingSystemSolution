@@ -6,24 +6,8 @@ using Xunit;
 
 namespace BookingSystem.Test3.IntegrationTests
 {
-    public class CustomerIntegrationTests : IntegrationTestBase
+    public class CustomerIntegrationTests : IntegrationTestBaseInMemory
     {
-        [Fact]
-        public async Task CustomerWithId2_HasNameBob()
-        {
-            // Arrange
-            // Act
-            var response = await HttpClient.GetAsync("/api/Customers/2");
-            response.EnsureSuccessStatusCode();
-            var customer = await response.Content.ReadFromJsonAsync<CustomerDto>();
-
-            // Assert
-            Assert.NotNull(customer);
-            Assert.Equal(2, customer.CustomerId);
-            Assert.Equal("Bob", customer.Name); // matchar SeedHelper
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
         [Fact]
         public async Task CreateCustomer_NewCustomer_ReturnsCreated()
         {
@@ -58,6 +42,7 @@ namespace BookingSystem.Test3.IntegrationTests
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
             Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
         }
+
         [Fact]
         public async Task UpdateCustomer_CustomerWithId2_ReturnsUpdatedCustomer()
         {

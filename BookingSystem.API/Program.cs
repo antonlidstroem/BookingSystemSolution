@@ -43,6 +43,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<BookingSystemAPIContext>();
+
+    // Migrera databasen (skapar tabeller om de inte finns)
+    context.Database.Migrate();
+
+    // Seed data
+    SeedHelperRealDb.SeedDatabase(context);
+}
+
 
 app.UseHttpsRedirection();
 
@@ -56,3 +67,6 @@ namespace BookingSystem.API
 {
     public partial class Program { } // tom klass för WebApplicationFactory
 }
+
+
+

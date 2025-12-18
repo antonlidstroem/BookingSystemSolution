@@ -22,7 +22,7 @@ namespace BookingSystem.Test3
             context = new BookingSystemAPIContext(dbContextOptions);
             context.Database.EnsureCreated();
 
-            SeedHelper.SeedDatabase(context);
+            SeedHelperInMemory.SeedDatabase(context);
         }
 
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BookingSystem.Test3
 {
-    public static class SeedHelper
+    public static class SeedHelperInMemory
     {
         public static void SeedDatabase(BookingSystemAPIContext context)
         {

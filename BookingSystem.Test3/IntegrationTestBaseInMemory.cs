@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-public class IntegrationTestBase : IDisposable
+public class IntegrationTestBaseInMemory : IDisposable
 {
     protected readonly WebApplicationFactory<BookingSystem.API.Program> WebAppFactory;
     protected readonly HttpClient HttpClient;
     private readonly string _inMemoryDbName = Guid.NewGuid().ToString(); // unik per instans
 
-    public IntegrationTestBase()
+    public IntegrationTestBaseInMemory()
     {
         WebAppFactory = new WebApplicationFactory<BookingSystem.API.Program>()
             .WithWebHostBuilder(builder =>
@@ -38,7 +38,7 @@ public class IntegrationTestBase : IDisposable
         using var scope = WebAppFactory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<BookingSystemAPIContext>();
         context.Database.EnsureCreated();
-        SeedHelper.SeedDatabase(context);
+        SeedHelperInMemory.SeedDatabase(context);
         context.SaveChanges();
     }
 
