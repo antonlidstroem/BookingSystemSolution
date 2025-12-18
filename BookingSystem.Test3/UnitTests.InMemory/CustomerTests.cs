@@ -8,7 +8,7 @@ using BookingSystem.API.Services;
 using BookingSystem.DAL.Repositories;
 using BookingSystem.DTO.DTO;
 
-namespace BookingSystem.Test3.UnitTests
+namespace BookingSystem.Test3.UnitTests.InMemory
 {
     public class CustomerTests : TestBase
     {

@@ -20,7 +20,7 @@ namespace BookingSystem.API.Controllers
         public async Task<ActionResult<List<CustomerDto>>> GetAll()
         {
             var customers = await _service.GetAllAsync();
-            return Ok(customers);
+            return Ok(customers);     
         }
 
         // GET: api/customers/{id}

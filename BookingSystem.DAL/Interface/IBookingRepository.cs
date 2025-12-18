@@ -11,5 +11,6 @@ namespace BookingSystem.DAL.Interface
         Task<List<Booking>> GetBookingsForRoomAsync(int roomId);
         Task AddAsync(Booking booking);
         Task SaveChangesAsync();
+        IQueryable<Booking> GetAllBookingsQuery();
     }
 }

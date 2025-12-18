@@ -2,6 +2,7 @@
 using BookingSystem.DAL.Interface;
 using BookingSystem.DAL.Model;
 using BookingSystem.DTO.DTO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public class BookingService : IBookingService
@@ -15,30 +16,40 @@ public class BookingService : IBookingService
 
     public async Task<BookingDto> CreateAsync(BookingDto dto)
     {
-        if (!await IsRoomAvailableAsync(dto.RoomId, dto.StartTime, dto.EndTime))
-            throw new InvalidOperationException("Room is not available");
+        // dto.StartDate och dto.EndDate är redan DateOnly, ingen konvertering behövs
+        bool available = await IsRoomAvailableAsync(dto.RoomId, dto.StartDate, dto.EndDate);
+
+        if (!available)
+        {
+            throw new InvalidOperationException("Rummet är redan bokat under dessa datum");
+        }
 
         var entity = new Booking
         {
             RoomId = dto.RoomId,
             CustomerId = dto.CustomerId,
-            StartTime = dto.StartTime,
-            EndTime = dto.EndTime
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate
         };
 
         await _repo.AddAsync(entity);
         await _repo.SaveChangesAsync();
 
-        dto.BookingId = entity.BookingId; // om du auto-genererar id i databasen
+        dto.BookingId = entity.BookingId;
         return dto;
-        //return null;
     }
 
-    public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime start, DateTime end)
+
+
+    public async Task<bool> IsRoomAvailableAsync(int roomId, DateOnly start, DateOnly end)
     {
-        var bookings = await _repo.GetBookingsForRoomAsync(roomId);
-        return bookings.All(b => b.EndTime <= start || b.StartTime >= end);
+        return !await _repo.GetAllBookingsQuery()
+            .AnyAsync(b => b.RoomId == roomId &&
+                           b.StartDate <= end &&
+                           b.EndDate >= start);
     }
+
+
 
     public async Task<List<BookingDto>> GetAllAsync()
     {
@@ -47,10 +58,10 @@ public class BookingService : IBookingService
         {
             BookingId = b.BookingId,
             RoomId = b.RoomId,
-            StartTime = b.StartTime,
-            EndTime = b.EndTime
+            CustomerId = b.CustomerId,
+            StartDate = b.StartDate,
+            EndDate = b.EndDate
         }).ToList();
-        //return null;
     }
 
     public async Task<BookingDto?> GetByIdAsync(int id)
@@ -61,10 +72,10 @@ public class BookingService : IBookingService
         {
             BookingId = b.BookingId,
             RoomId = b.RoomId,
-            StartTime = b.StartTime,
-            EndTime = b.EndTime
+            CustomerId = b.CustomerId,
+            StartDate = b.StartDate,
+            EndDate = b.EndDate
         };
-        //return null;
     }
 
     public async Task<List<BookingDto>> GetBookingsForRoomAsync(int roomId)
@@ -74,9 +85,10 @@ public class BookingService : IBookingService
         {
             BookingId = b.BookingId,
             RoomId = b.RoomId,
-            StartTime = b.StartTime,
-            EndTime = b.EndTime
+            CustomerId = b.CustomerId,
+            StartDate = b.StartDate,
+            EndDate = b.EndDate
         }).ToList();
-        //return null;
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using BookingSystem.DTO.DTO;
+﻿using BookingSystem.DAL.Model;
+using BookingSystem.DTO.DTO;
 
 namespace BookingSystem.API.Interface
 {
@@ -7,7 +8,9 @@ namespace BookingSystem.API.Interface
         Task<List<BookingDto>> GetAllAsync();
         Task<BookingDto?> GetByIdAsync(int id);
         Task<BookingDto> CreateAsync(BookingDto dto);
-        Task<bool> IsRoomAvailableAsync(int roomId, DateTime start, DateTime end);
+        Task<bool> IsRoomAvailableAsync(int roomId, DateOnly start, DateOnly end);
         Task<List<BookingDto>> GetBookingsForRoomAsync(int roomId);
+     
+
     }
 }

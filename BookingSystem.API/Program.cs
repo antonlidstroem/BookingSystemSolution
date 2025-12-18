@@ -7,10 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+if (!builder.Environment.IsEnvironment("Testing")) { 
 builder.Services.AddDbContext<BookingSystemAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystemAPIContext") ?? throw new InvalidOperationException("Connection string 'BookingSystemAPIContext' not found.")));
+}
+
+
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -39,6 +43,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<BookingSystemAPIContext>();
+
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        context.Database.Migrate();
+    }
+
+    SeedHelperRealDb.SeedDatabase(context);
+}
+
 
 app.UseHttpsRedirection();
 
@@ -47,3 +63,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+namespace BookingSystem.API
+{
+    public partial class Program { } // tom klass för WebApplicationFactory
+}
+
+
+

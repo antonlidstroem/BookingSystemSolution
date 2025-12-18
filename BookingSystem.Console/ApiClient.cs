@@ -26,7 +26,7 @@ public class ApiClient
 
     public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime start, DateTime end)
     {
-        var url = $"api/bookings/available?roomId={roomId}&start={start:o}&end={end:o}";
+        var url = $"api/bookings/available?roomId={roomId}&start={start:yyyy-MM-dd}&end={end:yyyy-MM-dd}";
         return await _http.GetFromJsonAsync<bool>(url);
     }
 
